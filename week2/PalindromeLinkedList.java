@@ -1,76 +1,45 @@
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class PalindromeLinkedList {
     
-    static class Node {
-        char data;
-        Node next;
-        
-        Node(char data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
-    
-    static boolean isPalindrome(Node head) {
-        if (head == null) {
+    static boolean isPalindrome(LinkedList<Character> list) {
+        if (list.isEmpty()) {
             return true;
         }
         
-        // find the middle node of the linked list
-        Node slow = head;
-        Node fast = head;
-        while (fast.next != null && fast.next.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
+        // find the middle index of the linked list
+        int n = list.size();
+        int mid = n / 2;
         
         // reverse the second half of the linked list
-        Node prev = null;
-        Node curr = slow.next;
-        while (curr != null) {
-            Node next = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = next;
+        for (int i = mid; i < n; i++) {
+            list.add(i, list.removeLast());
         }
-        slow.next = prev;
         
         // check whether the first half and the reversed second half of the linked list are identical
-        Node p1 = head;
-        Node p2 = prev;
-        while (p2 != null) {
-            if (p1.data != p2.data) {
+        for (int i = 0; i < mid; i++) {
+            if (list.get(i) != list.get(n - i - 1)) {
                 return false;
             }
-            p1 = p1.next;
-            p2 = p2.next;
         }
         return true;
     }
     
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the number of nodes in the linked list: ");
+        System.out.print("Enter the number of elements in the linked list: ");
         int n = scanner.nextInt();
         scanner.nextLine();
         
-        Node head = null;
-        Node tail = null;
-        System.out.println("Enter the data for each node:");
+        LinkedList<Character> list = new LinkedList<>();
+        System.out.println("Enter the elements of the linked list:");
         for (int i = 0; i < n; i++) {
-            char data = scanner.nextLine().charAt(0);
-            Node node = new Node(data);
-            if (head == null) {
-                head = node;
-                tail = node;
-            } else {
-                tail.next = node;
-                tail = node;
-            }
+            char element = scanner.nextLine().charAt(0);
+            list.add(element);
         }
         
-        if (isPalindrome(head)) {
+        if (isPalindrome(list)) {
             System.out.println("The linked list is a palindrome.");
         } else {
             System.out.println("The linked list is not a palindrome.");
